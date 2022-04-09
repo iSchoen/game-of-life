@@ -7,7 +7,7 @@ interface IProps {
   numCols: number;
   toggleCellState: (rowIdx: number, colIdx: number) => void;
   cells: CellState[][];
-  startGame: () => void;
+  startGame: (superspeed: boolean) => void;
   stopGame: () => void;
   getNextGeneration: () => void;
 }
@@ -23,7 +23,7 @@ export const Board: React.FC<IProps> = ({
 }) => (
   <div className="board-container">
     <div className="board-controls-container">
-      <button className="start-button" onClick={startGame}>
+      <button className="start-button" onClick={() => startGame(false)}>
         Start
       </button>
       <button className="stop-button" onClick={stopGame}>
@@ -31,6 +31,9 @@ export const Board: React.FC<IProps> = ({
       </button>
       <button className="next-button" onClick={getNextGeneration}>
         Next
+      </button>
+      <button className="superspeed-button" onClick={() => startGame(true)}>
+        ?
       </button>
     </div>
 
