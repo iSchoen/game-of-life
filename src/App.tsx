@@ -19,7 +19,8 @@ type BoardAction =
   | { type: "setCols"; payload: { newNumCols: number } }
   | { type: "nextGeneration" }
   | { type: "startGame"; payload: { superspeed: boolean } }
-  | { type: "stopGame" };
+  | { type: "stopGame" }
+  | { type: "resetGame" };
 
 const boardReducer = (state: BoardState, action: BoardAction) => {
   const { numRows, numCols, cells } = state;
@@ -42,6 +43,7 @@ const boardReducer = (state: BoardState, action: BoardAction) => {
         ...state,
         numRows: newNumRows,
         cells: getEmptyBoard(newNumRows, numCols),
+        gameStarted: false,
       };
 
     case "setCols":
@@ -51,6 +53,7 @@ const boardReducer = (state: BoardState, action: BoardAction) => {
         ...state,
         numCols: newNumCols,
         cells: getEmptyBoard(numRows, newNumCols),
+        gameStarted: false,
       };
 
     case "nextGeneration":
@@ -84,6 +87,13 @@ const boardReducer = (state: BoardState, action: BoardAction) => {
     case "stopGame":
       return { ...state, gameStarted: false };
 
+    case "resetGame":
+      return {
+        ...state,
+        cells: getEmptyBoard(numRows, numCols),
+        gameStarted: false,
+      };
+
     default:
       return state;
   }
@@ -106,7 +116,7 @@ const App: React.FC = () => {
         () => {
           boardDispatch({ type: "nextGeneration" });
         },
-        superspeed ? 100 : 1000
+        superspeed ? 50 : 1000
       );
 
       return () => clearInterval(interval);
@@ -148,6 +158,11 @@ const App: React.FC = () => {
       type: "stopGame",
     });
 
+  const resetGame = () =>
+    boardDispatch({
+      type: "resetGame",
+    });
+
   return (
     <div className="app-container">
       <BoardConfig
@@ -165,6 +180,7 @@ const App: React.FC = () => {
         startGame={startGame}
         stopGame={stopGame}
         getNextGeneration={getNextGeneration}
+        resetGame={resetGame}
       />
     </div>
   );

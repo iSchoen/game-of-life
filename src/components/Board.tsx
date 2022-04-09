@@ -10,6 +10,7 @@ interface IProps {
   startGame: (superspeed: boolean) => void;
   stopGame: () => void;
   getNextGeneration: () => void;
+  resetGame: () => void;
 }
 
 export const Board: React.FC<IProps> = ({
@@ -20,6 +21,7 @@ export const Board: React.FC<IProps> = ({
   startGame,
   stopGame,
   getNextGeneration,
+  resetGame,
 }) => (
   <div className="board-container">
     <div className="board-controls-container">
@@ -32,6 +34,7 @@ export const Board: React.FC<IProps> = ({
       <button className="next-button" onClick={getNextGeneration}>
         Next
       </button>
+      <button onClick={resetGame}>Reset</button>
       <button className="superspeed-button" onClick={() => startGame(true)}>
         ?
       </button>
