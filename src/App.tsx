@@ -10,6 +10,7 @@ interface BoardState {
   numCols: number;
   cells: CellState[][];
   gameStarted: boolean;
+  superspeed: boolean;
 }
 
 type BoardAction =
@@ -17,7 +18,7 @@ type BoardAction =
   | { type: "setRows"; payload: { newNumRows: number } }
   | { type: "setCols"; payload: { newNumCols: number } }
   | { type: "nextGeneration" }
-  | { type: "startGame" }
+  | { type: "startGame"; payload: { superspeed: boolean } }
   | { type: "stopGame" };
 
 const boardReducer = (state: BoardState, action: BoardAction) => {
@@ -76,7 +77,9 @@ const boardReducer = (state: BoardState, action: BoardAction) => {
       return { ...state, cells: nextGeneration };
 
     case "startGame":
-      return { ...state, gameStarted: true };
+      const { superspeed } = action.payload;
+
+      return { ...state, gameStarted: true, superspeed };
 
     case "stopGame":
       return { ...state, gameStarted: false };
@@ -92,15 +95,19 @@ const App: React.FC = () => {
     numCols: initialSize,
     cells: getEmptyBoard(initialSize, initialSize),
     gameStarted: false,
+    superspeed: false,
   });
 
-  const { numRows, numCols, cells, gameStarted } = boardState;
+  const { numRows, numCols, cells, gameStarted, superspeed } = boardState;
 
   useEffect(() => {
     if (gameStarted) {
-      const interval = setInterval(() => {
-        boardDispatch({ type: "nextGeneration" });
-      }, 1000);
+      const interval = setInterval(
+        () => {
+          boardDispatch({ type: "nextGeneration" });
+        },
+        superspeed ? 100 : 1000
+      );
 
       return () => clearInterval(interval);
     }
@@ -130,9 +137,10 @@ const App: React.FC = () => {
       type: "nextGeneration",
     });
 
-  const startGame = () =>
+  const startGame = (superspeed: boolean) =>
     boardDispatch({
       type: "startGame",
+      payload: { superspeed },
     });
 
   const stopGame = () =>
