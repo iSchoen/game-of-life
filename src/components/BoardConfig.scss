@@ -1,0 +1,26 @@
+.board-config-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .board-config-inputs-container {
+    display: flex;
+    gap: 4px;
+
+    input {
+      width: 40px;
+    }
+  }
+
+  .board-size-error {
+    color: red;
+
+    &.hide-error {
+      visibility: hidden;
+    }
+
+    &.show-error {
+      visibility: visible;
+    }
+  }
+}

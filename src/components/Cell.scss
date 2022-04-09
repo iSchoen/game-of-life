@@ -1,0 +1,7 @@
+.cell {
+  border: 1px solid black;
+
+  &.alive {
+    background-color: black;
+  }
+}
